@@ -24,13 +24,13 @@ class ClientesController {
                         [Op.like]: '%' + nome + '%'
                     },
                     tipo
-                    
+
                 }
             });
 
             if (cliente) {
 
-                res.status(200).json(cliente);
+                res.status(200).json({ dados: cliente });
             }
         } catch (e) {
             console.log(e);
@@ -38,24 +38,41 @@ class ClientesController {
         }
     }
     async alterar(req, res) {
+
+        const { uuid } = req.params;
+        const { nome, tipo } = req.body;
+
         try {
-            res.status(204).send();
+            const cliente = await Cliente.update({ nome, tipo }, { where: { id: uuid } });
+            if (cliente) {
+                res.status(204).send();
+            }
         } catch (e) {
             console.log(e);
             res.status(400).send();
         }
     }
     async buscar(req, res) {
+        const { uuid } = req.params;
+
         try {
-            res.status(200).send();
+            const cliente = await Cliente.findByPk(uuid);
+            if (cliente) {
+                res.status(200).json(cliente);
+            }
         } catch (e) {
             console.log(e);
             res.status(400).send();
         }
     }
     async deletar(req, res) {
+        const { uuid } = req.params;
+
         try {
-            res.status(204).send();
+            const cliente = await Cliente.update({ data_remocao: new Date }, { where: { id: uuid } })
+            if (cliente) {
+                res.status(204).send();
+            }
         } catch (e) {
             console.log(e);
             res.status(400).send();

@@ -9,9 +9,9 @@ routes.get('/', async (req, res) => {
 
 routes.post('/api/v1/clientes', clientesController.cadastrar)//CREATE
 routes.get('/api/v1/clientes', clientesController.listar)//READ
-routes.put('/api/v1/cliente/:uuid')//EDIT
-routes.get('/api/v1/cliente/:uuid')//SHOW
-routes.delete('/api/v1/cliente/:uuid')//SOFT-DELETE
+routes.put('/api/v1/cliente/:uuid', clientesController.alterar)//EDIT
+routes.get('/api/v1/cliente/:uuid', clientesController.buscar)//SHOW
+routes.delete('/api/v1/cliente/:uuid', clientesController.deletar)//SOFT-DELETE
 
 routes.post('/api/v1/enderecos')//CREATE
 routes.get('/api/v1/enderecos')//READ
