@@ -1,6 +1,8 @@
 const routes = require('express').Router();
 
 const clientesController = require('./controller/clientesController');
+const enderecosController = require('./controller/enderecosController');
+
 
 routes.get('/', async (req, res) => {
     res.json('msg: Hello World!')
@@ -13,11 +15,11 @@ routes.put('/api/v1/cliente/:uuid', clientesController.alterar)//EDIT
 routes.get('/api/v1/cliente/:uuid', clientesController.buscar)//SHOW
 routes.delete('/api/v1/cliente/:uuid', clientesController.deletar)//SOFT-DELETE
 
-routes.post('/api/v1/enderecos')//CREATE
-routes.get('/api/v1/enderecos')//READ
-routes.put('/api/v1/endereco/:uuid')//EDIT
-routes.get('/api/v1/endereco/:uuid')//SHOW
-routes.delete('/api/v1/endereco/:uuid')//SOFT-DELETE
+routes.post('/api/v1/enderecos', enderecosController.cadastrar)//CREATE
+routes.get('/api/v1/enderecos', enderecosController.listar)//READ
+routes.put('/api/v1/endereco/:uuid',enderecosController.alterar)//EDIT
+routes.get('/api/v1/endereco/:uuid',enderecosController.buscar)//SHOW
+routes.delete('/api/v1/endereco/:uuid', enderecosController.deletar)//SOFT-DELETE
 
 routes.post('/api/v1/pontos')//CREATE
 routes.get('/api/v1/pontos')//READ

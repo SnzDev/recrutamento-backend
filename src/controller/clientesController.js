@@ -1,6 +1,5 @@
 const { Cliente } = require('../app/models');
-const Sequelize = require('Sequelize')
-const Op = Sequelize.Op;
+const { Op } = require('Sequelize');
 
 class ClientesController {
     async cadastrar(req, res) {
