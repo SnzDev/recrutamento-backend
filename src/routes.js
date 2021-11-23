@@ -3,6 +3,8 @@ const routes = require('express').Router();
 const clientesController = require('./controller/clientesController');
 const enderecosController = require('./controller/enderecosController');
 const pontosController = require('./controller/pontosController');
+const contratosController = require('./controller/contratosController');
+
 
 
 
@@ -27,8 +29,8 @@ routes.post('/api/v1/pontos', pontosController.cadastrar)//CREATE
 routes.get('/api/v1/pontos', pontosController.listar)//READ
 routes.delete('/api/v1/ponto/:uuid', pontosController.deletar)//SOFT-DELETE
 
-routes.post('/api/v1/contratos')//CREATE
-routes.get('/api/v1/contratos')//READ
+routes.post('/api/v1/contratos', contratosController.cadastrar)//CREATE
+routes.get('/api/v1/contratos', contratosController.listar)//READ
 routes.get('/api/v1/endereco/:uuid')//SHOW
 routes.delete('/api/v1/endereco/:uuid')//SOFT-DELETE
 

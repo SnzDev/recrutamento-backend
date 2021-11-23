@@ -8,5 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 't_endereco',
     });
 
+    Endereco.associate = function (models) {
+        Endereco.hasMany(models.Ponto, { as: 'ponto' })
+    }
+
     return Endereco;
 }
