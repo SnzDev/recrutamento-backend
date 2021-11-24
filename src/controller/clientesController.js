@@ -92,14 +92,14 @@ class ClientesController {
         const { uuid } = req.params;
 
         try {
-            const verificaSeExisteId = await Cliente.count({ where: { id: uuid } });
-
-            if (verificaSeExisteId == 0) {
+            const { data_remocao } = await Cliente.findOne({ where: { id: uuid } });
+            if (data_remocao != null) {
                 res.status(400).send();
-            }
-            const cliente = await Cliente.update({ data_remocao: new Date }, { where: { id: uuid } })
-            if (cliente) {
-                res.status(204).send();
+            } else {
+                const cliente = await Cliente.update({ data_remocao: new Date }, { where: { id: uuid } })
+                if (cliente) {
+                    res.status(204).send();
+                }
             }
         } catch (e) {
             console.log(e);

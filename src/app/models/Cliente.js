@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     }, { tableName: 't_cliente' });
 
     Cliente.associate = function (models) {
-        Cliente.belongsTo(models.Cliente, { foreignKey: 'id' })
+        Cliente.belongsTo(models.Cliente, { foreignKey: 'id', as:'cliente'})
     };
     return Cliente;
 }

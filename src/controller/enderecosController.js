@@ -92,9 +92,14 @@ class EnderecosController {
         const { uuid } = req.params;
 
         try {
-            const endereco = await Endereco.update({ data_remocao: new Date }, { where: { id: uuid } })
-            if (endereco) {
-                res.status(204).send();
+            const { data_remocao } = await Endereco.findOne({ where: { id: uuid } });
+            if (data_remocao != null) {
+                res.status(400).send();
+            } else {
+                const endereco = await Endereco.update({ data_remocao: new Date }, { where: { id: uuid } })
+                if (endereco) {
+                    res.status(204).send();
+                }
             }
         } catch (e) {
             console.log(e);

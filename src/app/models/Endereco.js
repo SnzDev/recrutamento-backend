@@ -2,15 +2,15 @@ module.exports = (sequelize, DataTypes) => {
     const Endereco = sequelize.define('Endereco', {
         logradouro: DataTypes.STRING,
         bairro: DataTypes.STRING,
-        numero: DataTypes.SMALLINT,
+        numero: DataTypes.INTEGER,
         data_remocao: DataTypes.DATE,
     }, {
         tableName: 't_endereco',
     });
 
     Endereco.associate = function (models) {
-        Endereco.hasMany(models.Ponto, { as: 'ponto' })
-    }
+        Endereco.belongsTo(models.Endereco, { foreignKey: 'id', as: 'endereco'})
+    };
 
     return Endereco;
 }
