@@ -31,8 +31,8 @@ routes.delete('/api/v1/ponto/:uuid', pontosController.deletar)//SOFT-DELETE
 
 routes.post('/api/v1/contratos', contratosController.cadastrar)//CREATE
 routes.get('/api/v1/contratos', contratosController.listar)//READ
-routes.get('/api/v1/endereco/:uuid')//SHOW
-routes.delete('/api/v1/endereco/:uuid')//SOFT-DELETE
+routes.get('/api/v1/contrato/:uuid', contratosController.buscar)//SHOW
+routes.delete('/api/v1/contrato/:uuid', contratosController.deletar)//SOFT-DELETE
 
 routes.get('/api/v1/endereco/:uuid/historico')//SHOW
 
