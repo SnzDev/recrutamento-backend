@@ -4,6 +4,8 @@ const clientesController = require('./controller/clientesController');
 const enderecosController = require('./controller/enderecosController');
 const pontosController = require('./controller/pontosController');
 const contratosController = require('./controller/contratosController');
+const historicoController = require('./controller/historicoController');
+
 
 
 
@@ -34,7 +36,11 @@ routes.get('/api/v1/contratos', contratosController.listar)//READ
 routes.get('/api/v1/contrato/:uuid', contratosController.buscar)//SHOW
 routes.delete('/api/v1/contrato/:uuid', contratosController.deletar)//SOFT-DELETE
 
-routes.get('/api/v1/endereco/:uuid/historico')//SHOW
+routes.put('/api/v1/contrato/:uuid/vigorar', historicoController.mudarParaEmVigor)//SHOW
+routes.put('/api/v1/contrato/:uuid/desativar',historicoController.mudarParaDesativadoTemporario)//SHOW
+routes.put('/api/v1/contrato/:uuid/cancelar',historicoController.mudarParaCancelado)//SHOW
+routes.get('/api/v1/contrato/:uuid/historico',historicoController.buscarHistorico)//SHOW
+
 
 
 
