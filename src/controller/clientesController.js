@@ -10,20 +10,21 @@ class ClientesController {
 
             if (verificaDuplicidade > 0) {
                 const { data_remocao } = await Cliente.findOne({ where: { nome } });
-                console.log(data_remocao)
+
                 if (data_remocao == null) {
                     res.status(400).send();
                 }
 
                 if (data_remocao != null) {
-                    const cliente = await Cliente.update({ data_remocao: null }, { where: { nome } })
+                    const updateCliente = await Cliente.update({ data_remocao: null }, { where: { nome } })
                     res.status(201).send();
                 }
 
-            }
-            const cliente = await Cliente.create({ nome, tipo });
-            if (cliente) {
-                res.status(201).send();
+            } else {
+                const cliente = await Cliente.create({ nome, tipo });
+                if (cliente) {
+                    res.status(201).send();
+                }
             }
         } catch (e) {
             console.log(e);
@@ -63,10 +64,11 @@ class ClientesController {
 
             if (verificaSeExisteId == 0) {
                 res.status(400).send();
-            }
-            const cliente = await Cliente.update({ nome, tipo }, { where: { id: uuid } });
-            if (cliente) {
-                res.status(204).send();
+            } else {
+                const cliente = await Cliente.update({ nome, tipo }, { where: { id: uuid } });
+                if (cliente) {
+                    res.status(204).send();
+                }
             }
         } catch (e) {
             console.log(e);
