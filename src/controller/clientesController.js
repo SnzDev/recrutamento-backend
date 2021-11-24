@@ -4,7 +4,23 @@ const { Op } = require('Sequelize');
 class ClientesController {
     async cadastrar(req, res) {
         const { nome, tipo } = req.body;
+
         try {
+            const verificaDuplicidade = await Cliente.count({ where: { nome } });
+
+            if (verificaDuplicidade > 0) {
+                const { data_remocao } = await Cliente.findOne({ where: { nome } });
+                console.log(data_remocao)
+                if (data_remocao == null) {
+                    res.status(400).send();
+                }
+
+                if (data_remocao != null) {
+                    const cliente = await Cliente.update({ data_remocao: null }, { where: { nome } })
+                    res.status(201).send();
+                }
+
+            }
             const cliente = await Cliente.create({ nome, tipo });
             if (cliente) {
                 res.status(201).send();
@@ -24,7 +40,8 @@ class ClientesController {
                     },
                     tipo
 
-                }
+                },
+                attributes: ['nome', 'tipo']
             });
 
             if (cliente) {
@@ -42,6 +59,11 @@ class ClientesController {
         const { nome, tipo } = req.body;
 
         try {
+            const verificaSeExisteId = await Cliente.count({ where: { id: uuid } });
+
+            if (verificaSeExisteId == 0) {
+                res.status(400).send();
+            }
             const cliente = await Cliente.update({ nome, tipo }, { where: { id: uuid } });
             if (cliente) {
                 res.status(204).send();
@@ -55,7 +77,7 @@ class ClientesController {
         const { uuid } = req.params;
 
         try {
-            const cliente = await Cliente.findByPk(uuid);
+            const cliente = await Cliente.findByPk(uuid, { attributes: ['nome', 'tipo'] });
             if (cliente) {
                 res.status(200).json(cliente);
             }
@@ -68,6 +90,11 @@ class ClientesController {
         const { uuid } = req.params;
 
         try {
+            const verificaSeExisteId = await Cliente.count({ where: { id: uuid } });
+
+            if (verificaSeExisteId == 0) {
+                res.status(400).send();
+            }
             const cliente = await Cliente.update({ data_remocao: new Date }, { where: { id: uuid } })
             if (cliente) {
                 res.status(204).send();
