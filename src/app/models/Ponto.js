@@ -7,17 +7,11 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 't_ponto'
     });
 
+    Ponto.associate = function (models) {
+        Ponto.belongsTo(models.Cliente);
+        Ponto.belongsTo(models.Endereco);
+}
 
 
-    Ponto.associate = function (models) {
-        Ponto.hasMany(models.Contrato, { foreignKey: 'id', as: 'contrato' })
-    };
-    Ponto.associate = function (models) {
-        Ponto.belongsTo(models.Endereco, { foreignKey: 'endereco_id', as: 'endereco' })
-    };
-
-    Ponto.associate = function (models) {
-        Ponto.belongsTo(models.Cliente, { foreignKey: 'cliente_id', as: 'cliente' })
-    };
-    return Ponto;
+return Ponto;
 }
