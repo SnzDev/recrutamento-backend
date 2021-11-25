@@ -5,26 +5,20 @@ class EnderecosController {
         const { logradouro, bairro, numero } = req.body;
 
         try {
-            const verificaDuplicidade = await Endereco.count({ where: { logradouro, bairro, numero } })
-            if (verificaDuplicidade > 0) {
-                const { data_remocao } = await Endereco.findOne({ where: { logradouro, bairro, numero } });
-                if (data_remocao == null) {
-                    res.status(400).send();
+            const endereco = await Endereco.findOne({ where: { logradouro, bairro, numero } })
+            if (endereco) {
+                if (endereco.data_remocao == null) {
+                    return res.status(400).send();
                 }
-
-                if (data_remocao != null) {
-                    const updateEndereco = await Endereco.update({ data_remocao: null }, { where: { logradouro, bairro, numero } })
-                    res.status(201).send();
-                }
-
-            } else {
-                const endereco = await Endereco.create({ logradouro, bairro, numero });
-
-                if (endereco) {
-                    res.status(201).send();
-                }
+                await Endereco.update({ data_remocao: null }, { where: { logradouro, bairro, numero } })
+                return res.status(201).send();
             }
-        } catch (e) {
+
+            await Endereco.create({ logradouro, bairro, numero });
+            return res.status(201).send();
+        }
+
+        catch (e) {
             console.log(e);
             res.status(400).send();
         }
@@ -41,35 +35,36 @@ class EnderecosController {
                     bairro: {
                         [Op.like]: '%' + bairro + '%'
                     },
-                    numero: 100
+                    numero
                 },
                 attributes: ['logradouro', 'bairro', 'numero']
             });
-            res.status(200).json({ dados: endereco });
+
+            return res.status(200).json({ dados: endereco });
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
-    async alterar(req, res) {//FINDED BUG FOR INEXISTENT UUID
+    async alterar(req, res) {
         const { uuid } = req.params;
         const { logradouro, bairro, numero } = req.body;
 
 
         try {
-            const verificaSeExisteId = await Endereco.count({ where: { id: uuid } });
+            const endereco = await Endereco.findByPk(uuid);
 
-            if (verificaSeExisteId == 0) {
-                res.status(400).send();
-            } else {
-                const endereco = await Endereco.update({ logradouro, bairro, numero }, { where: { id: uuid } });
-                if (endereco) {
-                    res.status(204).send();
-                }
+            if (!endereco) {
+                return res.status(400).send();
             }
+
+            await Endereco.update({ logradouro, bairro, numero }, { where: { id: uuid } });
+            return res.status(204).send();
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
 
@@ -77,33 +72,36 @@ class EnderecosController {
         const { uuid } = req.params;
 
         try {
-            const endereco = await Endereco.findByPk(uuid, {
-                attributes: ['logradouro', 'bairro', 'numero']
-            });
-            if (endereco) {
-                res.status(200).json(endereco);
+            const endereco = await Endereco.findByPk(uuid, { attributes: ['logradouro', 'bairro', 'numero'] });
+
+            if (!endereco) {
+                return res.status(400).send();
             }
+
+            return res.status(200).json(endereco);
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
     async deletar(req, res) {
         const { uuid } = req.params;
 
         try {
-            const { data_remocao } = await Endereco.findOne({ where: { id: uuid } });
-            if (data_remocao != null) {
-                res.status(400).send();
-            } else {
-                const endereco = await Endereco.update({ data_remocao: new Date }, { where: { id: uuid } })
-                if (endereco) {
-                    res.status(204).send();
-                }
+            const endereco = await Endereco.findByPk(uuid);
+
+            if (!endereco || endereco.data_remocao != null) {
+                return res.status(400).send();
             }
+
+            await Endereco.update({ data_remocao: new Date }, { where: { id: uuid } })
+            return res.status(204).send();
+
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
 }
