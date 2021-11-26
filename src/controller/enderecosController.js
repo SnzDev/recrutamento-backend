@@ -1,4 +1,5 @@
 const { Endereco } = require('../app/models');
+const { Ponto } = require('../app/models');
 const { Op } = require('Sequelize');
 class EnderecosController {
     async cadastrar(req, res) {
@@ -96,6 +97,8 @@ class EnderecosController {
             }
 
             await Endereco.update({ data_remocao: new Date }, { where: { id: uuid } })
+            await Ponto.update({ data_remocao: new Date }, { where: { endereco_id: uuid } })
+
             return res.status(204).send();
 
 

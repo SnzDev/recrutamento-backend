@@ -1,6 +1,8 @@
 const { Ponto } = require('../app/models');
 const { Cliente } = require('../app/models');
 const { Endereco } = require('../app/models');
+const { Contrato } = require('../app/models');
+
 
 class PontosController {
     async cadastrar(req, res) {
@@ -20,6 +22,10 @@ class PontosController {
                 return res.status(400).send();
             }
 
+            if (!ponto.data_remocao) {
+                return res.status(400).send();
+
+            }
             await Ponto.update({ data_remocao: null }, { where: { cliente_id, endereco_id } });
             return res.status(201).send();
 
@@ -33,10 +39,16 @@ class PontosController {
         const { uuid } = req.params;
 
         try {
-            const ponto = await Ponto.findByPk(uuid);
+            const ponto = await Ponto.findOne({ where: { id: uuid } });
 
-            if (!ponto || ponto.data_remocao != null) {
+            if (!ponto || ponto.data_remocao) {
                 return res.status(400).send();
+            }
+
+            const contrato = await Contrato.findOne({ where: { ponto_id: uuid } });
+
+            if (contrato && !contrato.data_remocao) {
+                await Contrato.update({ data_remocao: new Date }, { where: { ponto_id: uuid } })
             }
 
             await Ponto.update({ data_remocao: new Date }, { where: { id: uuid } })
@@ -73,7 +85,7 @@ class PontosController {
                 "endereco_numero": ponto.Endereco.numero,
             }
 
-            res.json({dados: jsonPreparado});
+            res.json({ dados: jsonPreparado });
         } catch (e) {
             console.log(e);
             res.status(400).send();

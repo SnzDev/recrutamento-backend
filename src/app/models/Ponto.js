@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     Ponto.associate = function (models) {
         Ponto.belongsTo(models.Cliente);
         Ponto.belongsTo(models.Endereco);
+
 }
 
 

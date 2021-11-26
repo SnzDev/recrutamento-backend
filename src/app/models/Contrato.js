@@ -4,6 +4,9 @@ module.exports = (sequelize, DataTypes) => {
         estado: DataTypes.STRING,
         data_remocao: DataTypes.DATE,
     }, { tableName: 't_contrato' });
+    
 
     return Contrato;
+
+
 }

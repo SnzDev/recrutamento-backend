@@ -86,6 +86,7 @@ class HistoricoController {
         try {
             const historico = await Historico.findAll({
                 where: { contrato_id: uuid },
+                order: [['data_criacao', 'ASC']],
                 attributes: ['id', ['data_criacao', 'data_evento'], ['estado_anterior', 'estado_antigo'], ['estado_posterior', 'estado_novo']]
             })
 
