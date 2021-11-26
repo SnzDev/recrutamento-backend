@@ -53,11 +53,27 @@ class PontosController {
         try {
             const ponto = await Ponto.findOne({
                 where: { cliente_id, endereco_id },
-                include: [Cliente, Endereco],
-                raw: true,
+                attributes: ['id'],
+                include: [{
+                    model: Cliente,
+                    attributes: { exclude: 'data_remocao' }
+                }, {
+                    model: Endereco,
+                    attributes: { exclude: 'data_remocao' }
+                },],
             })
+            const jsonPreparado = {
+                "id": ponto.id,
+                "cliente_id": ponto.Cliente.id,
+                "cliente_nome": ponto.Cliente.nome,
+                "cliente_tipo": ponto.Cliente.tipo,
+                "endereco_id": ponto.Endereco.id,
+                "endereco_logradouro": ponto.Endereco.logradouro,
+                "endereco_bairro": ponto.Endereco.bairro,
+                "endereco_numero": ponto.Endereco.numero,
+            }
 
-            res.json(ponto);
+            res.json({dados: jsonPreparado});
         } catch (e) {
             console.log(e);
             res.status(400).send();
