@@ -6,29 +6,27 @@ class ClientesController {
         const { nome, tipo } = req.body;
 
         try {
-            const verificaDuplicidade = await Cliente.count({ where: { nome } });
+            const cliente = await Cliente.findOne({ where: { nome } });
 
-            if (verificaDuplicidade > 0) {
-                const { data_remocao } = await Cliente.findOne({ where: { nome } });
+            if (cliente) {
+                const { data_remocao } = cliente;
 
                 if (data_remocao == null) {
-                    res.status(400).send();
+                    return res.status(400).send();
                 }
 
-                if (data_remocao != null) {
-                    const updateCliente = await Cliente.update({ data_remocao: null }, { where: { nome } })
-                    res.status(201).send();
-                }
+                await Cliente.update({ data_remocao: null }, { where: { nome } })
+                return res.status(201).send();
 
-            } else {
-                const cliente = await Cliente.create({ nome, tipo });
-                if (cliente) {
-                    res.status(201).send();
-                }
             }
+
+            await Cliente.create({ nome, tipo });
+            return res.status(201).send();
+
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
     async listar(req, res) {
@@ -45,13 +43,11 @@ class ClientesController {
                 attributes: ['nome', 'tipo']
             });
 
-            if (cliente) {
+            return res.status(200).json({ dados: cliente });
 
-                res.status(200).json({ dados: cliente });
-            }
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
     async alterar(req, res) {
@@ -60,19 +56,20 @@ class ClientesController {
         const { nome, tipo } = req.body;
 
         try {
-            const verificaSeExisteId = await Cliente.count({ where: { id: uuid } });
+            const cliente = await Cliente.findByPk(uuid);
 
-            if (verificaSeExisteId == 0) {
-                res.status(400).send();
-            } else {
-                const cliente = await Cliente.update({ nome, tipo }, { where: { id: uuid } });
-                if (cliente) {
-                    res.status(204).send();
-                }
+            if (!cliente) {
+                return res.status(400).send();
             }
+
+            await Cliente.update({ nome, tipo }, { where: { id: uuid } });
+
+            return res.status(204).send();
+
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
     async buscar(req, res) {
@@ -80,30 +77,36 @@ class ClientesController {
 
         try {
             const cliente = await Cliente.findByPk(uuid, { attributes: ['nome', 'tipo'] });
-            if (cliente) {
-                res.status(200).json(cliente);
+
+            if (!cliente) {
+                return res.status(400).send();
             }
+
+            return res.status(200).json(cliente);
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
     async deletar(req, res) {
         const { uuid } = req.params;
 
         try {
-            const { data_remocao } = await Cliente.findOne({ where: { id: uuid } });
-            if (data_remocao != null) {
-                res.status(400).send();
-            } else {
-                const cliente = await Cliente.update({ data_remocao: new Date }, { where: { id: uuid } })
-                if (cliente) {
-                    res.status(204).send();
-                }
+            const cliente = await Cliente.findByPk(uuid);
+
+            if (!cliente || cliente.data_remocao != null) {
+                return res.status(400).send();
             }
+
+            await Cliente.update({ data_remocao: new Date }, { where: { id: uuid } })
+
+            return res.status(204).send();
+
+
         } catch (e) {
             console.log(e);
-            res.status(400).send();
+            return res.status(400).send();
         }
     }
 }

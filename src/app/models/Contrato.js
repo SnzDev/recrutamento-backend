@@ -5,8 +5,5 @@ module.exports = (sequelize, DataTypes) => {
         data_remocao: DataTypes.DATE,
     }, { tableName: 't_contrato' });
 
-    Contrato.associate = function (models) {
-        Contrato.belongsTo(models.Ponto, { foreignKey: 'ponto_id', as:'ponto'})
-    };
     return Contrato;
 }

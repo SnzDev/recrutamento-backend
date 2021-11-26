@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     }, { tableName: 't_cliente' });
 
     Cliente.associate = function (models) {
-        Cliente.belongsTo(models.Cliente, { foreignKey: 'id', as:'cliente'})
+        Cliente.belongsToMany(models.Endereco, { through: models.Ponto });
+        Cliente.hasMany(models.Ponto);
     };
+
     return Cliente;
 }

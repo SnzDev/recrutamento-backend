@@ -9,7 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     });
 
     Endereco.associate = function (models) {
-        Endereco.belongsTo(models.Endereco, { foreignKey: 'id', as: 'endereco'})
+        Endereco.belongsToMany(models.Cliente, { through: models.Ponto })
+        Endereco.hasMany(models.Ponto);
+
     };
 
     return Endereco;
